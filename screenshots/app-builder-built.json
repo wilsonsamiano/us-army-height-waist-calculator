@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Army WHtR Calculator",
+      "hasCanvas": false,
+      "bodyTextLen": 3212,
+      "bodyTextHash": "9c0067a8b56ebf67e09a8fca2e6abaac5a9d2db39ee5d285fd9b9432b2de9b6b",
+      "bodyTextPrefix": "Skip to content ARMY WHTR Height & waist Calculator DA 5500 Inst",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Army WHtR Calculator",
+      "hasCanvas": false,
+      "bodyTextLen": 3185,
+      "bodyTextHash": "5fd125a695c281ad4716964a86d437ba62cd4c54f08d7254799e3f515a59bbb3",
+      "bodyTextPrefix": "Skip to content ARMY WHTR Height & waist U.S. ARMY · AD 2026-13 ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json"
+}

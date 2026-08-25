@@ -1,0 +1,34 @@
+{
+  "name": "Army WHtR Calculator",
+  "short_name": "Army WHtR",
+  "description": "U.S. Army waist-to-height ratio calculator and DA Form 5500 transfer worksheet. Works offline.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0c0f0b",
+  "theme_color": "#0c0f0b",
+  "lang": "en-US",
+  "categories": ["utilities", "health"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
