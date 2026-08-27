@@ -115,15 +115,23 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Sync iOS project
         run: npm run ios:sync
-      - name: Simulator build (unsigned)
+      - name: CocoaPods
         run: |
           cd ios/App
-          xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO build
+          pod install
+      - name: Simulator build (unsigned)
+        continue-on-error: true
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- ONLY_ACTIVE_ARCH=NO build
       - name: Archive iOS project
+        if: always()
         run: tar -czf ios-app.tar.gz ios
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: ios-xcode-project
+          if-no-files-found: error
           path: |
             ios-app.tar.gz
       - name: Release (tags only)

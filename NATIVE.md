@@ -105,7 +105,8 @@ Then on macOS:
 
 ```sh
 cd ios/App
-xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO build
+pod install
+xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- build
 ```
 
 Or open `ios/App/App.xcworkspace` in Xcode, pick a Team, and Archive.
