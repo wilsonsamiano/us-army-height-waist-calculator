@@ -1,0 +1,8 @@
+target/
+gen/
+WixTools/
+icons/*.png
+icons/*.ico
+icons/*.icns
+icons/android/
+icons/ios/
