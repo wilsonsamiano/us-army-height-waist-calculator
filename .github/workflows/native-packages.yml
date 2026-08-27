@@ -1,0 +1,144 @@
+# Native desktop + mobile packages.
+# Ubuntu: Linux AppImage/deb and (when SDK is present) Android debug APK.
+# Windows/macOS runners: NSIS installer, macOS app/dmg, unsigned iOS project/simulator build.
+# Tag v* also attaches artifacts to a GitHub Release. No signing secrets are stored in the repo.
+# JS deps use npm install (not npm ci) so Capacitor/Tauri packages resolve even if package-lock lags.
+
+name: Native packages
+
+on:
+  push:
+    branches:
+      - native-packages
+    tags:
+      - "v*"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NODE_VERSION: "22"
+  APPIMAGE_EXTRACT_AND_RUN: "1"
+  NO_STRIP: "1"
+
+jobs:
+  desktop:
+    name: desktop-${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-22.04
+            args: --bundles appimage,deb
+          - platform: windows-latest
+            args: --bundles nsis
+          - platform: macos-latest
+            args: --bundles app,dmg
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Linux WebKit GTK
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libwebkit2gtk-4.1-0 libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - name: Install JS deps
+        run: npm install --no-audit --no-fund
+      - name: Generate app icons
+        run: npx tauri icon public/icon-512.png -o src-tauri/icons
+      - name: Build Tauri
+        run: npx tauri build ${{ matrix.args }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.platform }}
+          if-no-files-found: warn
+          path: |
+            src-tauri/target/release/bundle/**
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: src-tauri/target/release/bundle/**/**
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  android:
+    name: android-debug-apk
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v3
+      - name: Install JS deps
+        run: npm install --no-audit --no-fund
+      - name: Assemble debug APK
+        run: npm run android:apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: android/app/build/outputs/apk/debug/*.apk
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  apple-ios:
+    name: ios-xcode
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install JS deps
+        run: npm install --no-audit --no-fund
+      - name: Sync iOS project
+        run: npm run ios:sync
+      - name: CocoaPods
+        run: |
+          cd ios/App
+          pod install
+      - name: Simulator build (unsigned)
+        continue-on-error: true
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- ONLY_ACTIVE_ARCH=NO build
+      - name: Archive iOS project
+        if: always()
+        run: tar -czf ios-app.tar.gz ios
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-xcode-project
+          if-no-files-found: error
+          path: |
+            ios-app.tar.gz
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ios-app.tar.gz
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

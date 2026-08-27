@@ -6,6 +6,7 @@ import { publicShareHost } from "@/lib/og/share-host";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Army WHtR Calculator";
+const isNative = import.meta.env.VITE_NATIVE === "true";
 
 export const Route = createRootRoute({
   head: () => {
@@ -30,8 +31,12 @@ export const Route = createRootRoute({
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
         { rel: "manifest", href: "/manifest.webmanifest" },
         { rel: "stylesheet", href: appCss },
-        { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-        { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+        ...(!isNative
+          ? [
+              { rel: "manifest", href: "/__grok/manifest.webmanifest" },
+              { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+            ]
+          : []),
       ],
     };
   },
@@ -41,8 +46,8 @@ export const Route = createRootRoute({
         <HeadContent />
       </head>
       <body className="antialiased">
-        <PreviewHostBridge />
-        <PwaRegister />
+        {isNative ? null : <PreviewHostBridge />}
+        {isNative ? null : <PwaRegister />}
         <AuthProvider>
           <Outlet />
         </AuthProvider>
