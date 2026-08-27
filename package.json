@@ -18,7 +18,14 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/auth/gate-identity.test.ts",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:native": "node scripts/with-app-env.mjs vite build --config vite.native.config.ts && node scripts/prepare-native-web.mjs",
+    "tauri": "tauri",
+    "desktop:linux": "node scripts/desktop-linux.mjs",
+    "desktop:windows": "tauri build --bundles nsis",
+    "desktop:macos": "tauri build --bundles app,dmg",
+    "android:apk": "node scripts/android-apk.mjs",
+    "ios:sync": "node scripts/ios-sync.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.4",
@@ -58,7 +65,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.0.0",
-    "jose": "6.2.9",
+    "jose": "4.15.9",
     "jspdf": "^4.2.1",
     "kysely": "^0.28.5",
     "lucide-react": "^0.510.0",
@@ -76,7 +83,10 @@
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
     "zod": "^4.4.0",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.0",
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
@@ -97,6 +107,9 @@
     "prettier": "^3.4.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.56.1",
-    "vite": "^8.2.0"
-  }
+    "vite": "^8.2.0",
+    "@capacitor/cli": "^7.4.3",
+    "@tauri-apps/cli": "^2.8.5"
+  },
+  "version": "1.0.0"
 }
