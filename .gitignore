@@ -3,3 +3,13 @@ node_modules/
 .github_repo
 .env
 .env.*
+dist/
+.output/
+src-tauri/target/
+android/
+ios/
+*.apk
+*.aab
+*.ipa
+*.AppImage
+*.deb

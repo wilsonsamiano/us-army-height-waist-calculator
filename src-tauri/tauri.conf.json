@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Army WHtR Calculator",
+  "version": "1.0.0",
+  "identifier": "com.wilsonsamiano.armywhtr",
+  "build": {
+    "beforeDevCommand": "node scripts/with-app-env.mjs node_modules/.bin/vite dev --host 0.0.0.0 --port 8080",
+    "devUrl": "http://127.0.0.1:8080",
+    "beforeBuildCommand": "node scripts/with-app-env.mjs node_modules/.bin/vite build --config vite.native.config.ts && node scripts/prepare-native-web.mjs",
+    "frontendDist": "../dist/native-www"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Army WHtR Calculator",
+        "width": 420,
+        "height": 820,
+        "minWidth": 360,
+        "minHeight": 640,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}
