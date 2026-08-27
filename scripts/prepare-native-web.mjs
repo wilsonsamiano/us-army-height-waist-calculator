@@ -16,7 +16,7 @@ const npxBin = process.platform === "win32" ? "npx.cmd" : "npx";
 const icon = spawnSync(
   npxBin,
   ["tauri", "icon", "public/icon-512.png", "-o", "src-tauri/icons"],
-  { cwd: root, stdio: "inherit" },
+  { cwd: root, stdio: "inherit", shell: process.platform === "win32" },
 );
 if (icon.status !== 0) {
   console.warn("[prepare-native-web] tauri icon generation skipped or failed");

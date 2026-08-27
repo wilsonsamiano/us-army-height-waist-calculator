@@ -1,12 +1,13 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Army WHtR Calculator",
+  "mainBinaryName": "army-whtr-calculator",
   "version": "1.0.0",
   "identifier": "com.wilsonsamiano.armywhtr",
   "build": {
-    "beforeDevCommand": "node scripts/with-app-env.mjs node_modules/.bin/vite dev --host 0.0.0.0 --port 8080",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://127.0.0.1:8080",
-    "beforeBuildCommand": "node scripts/with-app-env.mjs node_modules/.bin/vite build --config vite.native.config.ts && node scripts/prepare-native-web.mjs",
+    "beforeBuildCommand": "npm run build:native",
     "frontendDist": "../dist/native-www"
   },
   "app": {
