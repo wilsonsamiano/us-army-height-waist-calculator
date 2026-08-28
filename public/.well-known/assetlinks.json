@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.wilsonsamiano.armywhtr",
+      "sha256_cert_fingerprints": [
+        "CA:AB:6B:BC:61:A7:6D:84:47:E2:77:5C:66:28:27:65:DB:79:A3:8A:25:92:1C:B7:68:07:3A:19:2E:B8:B4:10"
+      ]
+    }
+  }
+]

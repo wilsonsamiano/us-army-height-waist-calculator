@@ -1,0 +1,57 @@
+plugins {
+    id "com.android.application"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("keystore/keystore.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace "com.wilsonsamiano.armywhtr"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.wilsonsamiano.armywhtr"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+        resValue "string", "app_url", "https://us-army-height-waist-calculator.grok.me/"
+    }
+
+    signingConfigs {
+        release {
+            storeFile rootProject.file("keystore/army-whtr.jks")
+            storePassword keystoreProperties["storePassword"] ?: "armywhtr-sideload"
+            keyAlias keystoreProperties["keyAlias"] ?: "armywhtr"
+            keyPassword keystoreProperties["keyPassword"] ?: "armywhtr-sideload"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.webkit:webkit:1.11.0"
+    constraints {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+    }
+}
